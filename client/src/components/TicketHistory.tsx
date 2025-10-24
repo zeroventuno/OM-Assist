@@ -1,6 +1,6 @@
 import { type HistoryEntry } from "@shared/schema";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { it } from "date-fns/locale";
 import { Clock, Plus, Edit } from "lucide-react";
 
 interface TicketHistoryProps {
@@ -11,18 +11,18 @@ export default function TicketHistory({ history }: TicketHistoryProps) {
   if (!history || history.length === 0) {
     return (
       <div className="text-sm text-muted-foreground py-4 text-center">
-        Nenhum histórico disponível
+        Nessuna cronologia disponibile
       </div>
     );
   }
 
   const formatHistoryValue = (value: string): string => {
-    if (value === "-") return "Não informado";
+    if (value === "-") return "Non specificato";
     
     try {
       const date = new Date(value);
       if (!isNaN(date.getTime()) && value.includes("T")) {
-        return format(date, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+        return format(date, "dd/MM/yyyy 'alle' HH:mm", { locale: it });
       }
     } catch (e) {
       // Not a date
@@ -35,7 +35,7 @@ export default function TicketHistory({ history }: TicketHistoryProps) {
     <div className="space-y-3 py-4">
       <h4 className="text-sm font-semibold flex items-center gap-2 text-foreground">
         <Clock className="w-4 h-4" />
-        Histórico de Alterações
+        Cronologia delle Modifiche
       </h4>
       
       <div className="space-y-2">
@@ -61,24 +61,24 @@ export default function TicketHistory({ history }: TicketHistoryProps) {
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="font-medium text-foreground">{entry.field}</span>
                 <span className="text-xs text-muted-foreground">
-                  {format(new Date(entry.date), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                  {format(new Date(entry.date), "dd/MM/yyyy 'alle' HH:mm", { locale: it })}
                 </span>
               </div>
               
               {entry.action === "created" ? (
                 <p className="text-muted-foreground mt-0.5">
-                  Ticket criado
+                  Ticket creato
                 </p>
               ) : (
                 <div className="mt-1 space-y-0.5">
                   {entry.oldValue !== "-" && (
                     <div className="text-muted-foreground">
-                      <span className="text-xs uppercase tracking-wide">De:</span>{" "}
+                      <span className="text-xs uppercase tracking-wide">Da:</span>{" "}
                       <span className="line-through">{formatHistoryValue(entry.oldValue)}</span>
                     </div>
                   )}
                   <div className="text-foreground">
-                    <span className="text-xs uppercase tracking-wide text-muted-foreground">Para:</span>{" "}
+                    <span className="text-xs uppercase tracking-wide text-muted-foreground">A:</span>{" "}
                     <span className="font-medium">{formatHistoryValue(entry.newValue)}</span>
                   </div>
                 </div>

@@ -2,9 +2,11 @@
 
 ## Overview
 
-OM Assistenza is a comprehensive ticket management system designed for bicycle component technical support and warranty processing. The application enables tracking of support tickets through multiple phases (Entrada, Enviado, Em processamento, Finalizado) with detailed history tracking, approval workflows, and shipping management.
+OM Assistenza is a comprehensive ticket management system designed for bicycle component technical support and warranty processing. The application enables tracking of support tickets through multiple phases (Ingresso, Spedito, In lavorazione, Completato) with detailed history tracking, approval workflows, and shipping management.
 
 The system is built as a full-stack web application with a React frontend and Express backend, using PostgreSQL for data persistence. It emphasizes clean information hierarchy, workflow efficiency, and professional presentation suitable for technical support operations.
+
+**Language**: The entire user interface is in Italian (italiano), including all labels, buttons, messages, and validation texts, to serve an Italian factory's support operations.
 
 ## User Preferences
 
@@ -66,8 +68,8 @@ Preferred communication style: Simple, everyday language.
 - Client information (name, email)
 - Component details (type, brand, serial number)
 - Problem description and protocol number
-- Approval status workflow (Aprovado/Negado)
-- Phase tracking (Entrada → Enviado → Em processamento → Finalizado)
+- Approval status workflow (Approvato/Rifiutato)
+- Phase tracking (Ingresso → Spedito → In lavorazione → Completato)
 - Shipping information (date, tracking number, company)
 - Automatic history tracking with field-level audit trail
 - Timestamps for creation and completion
@@ -153,7 +155,7 @@ Preferred communication style: Simple, everyday language.
 - **drizzle-zod** - Drizzle to Zod schema generation
 
 ### Date Management
-- **date-fns** - Modern JavaScript date utility library with locale support (pt-BR)
+- **date-fns** - Modern JavaScript date utility library with locale support (it - Italian)
 
 ### Development Tools
 - **Vite** - Frontend build tool and dev server

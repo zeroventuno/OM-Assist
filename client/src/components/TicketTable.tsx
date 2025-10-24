@@ -4,7 +4,7 @@ import { Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import StatusBadge from "./StatusBadge";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { it } from "date-fns/locale";
 import { useState, Fragment } from "react";
 import TicketHistory from "./TicketHistory";
 
@@ -106,7 +106,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
                       <StatusBadge phase={ticket.phase as any} />
                     </td>
                     <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-date-${ticket.id}`}>
-                      {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                      {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: it })}
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex gap-2">
@@ -178,7 +178,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
 
                 <div className="flex items-center justify-between pt-2 border-t gap-2">
                   <span className="text-xs text-muted-foreground">
-                    {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                    {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: it })}
                   </span>
                   <div className="flex gap-1 flex-wrap">
                     <Button
