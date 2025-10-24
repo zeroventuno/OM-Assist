@@ -1,5 +1,7 @@
 import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { tickets } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getAllTickets(): Promise<Ticket[]>;
@@ -9,25 +11,17 @@ export interface IStorage {
   deleteTicket(id: string): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private tickets: Map<string, Ticket>;
-
-  constructor() {
-    this.tickets = new Map();
-  }
-
+export class DatabaseStorage implements IStorage {
   async getAllTickets(): Promise<Ticket[]> {
-    return Array.from(this.tickets.values()).sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-    );
+    return await db.select().from(tickets).orderBy(desc(tickets.createdAt));
   }
 
   async getTicket(id: string): Promise<Ticket | undefined> {
-    return this.tickets.get(id);
+    const [ticket] = await db.select().from(tickets).where(eq(tickets.id, id));
+    return ticket || undefined;
   }
 
   async createTicket(insertTicket: InsertTicket): Promise<Ticket> {
-    const id = randomUUID();
     const now = new Date();
     
     const initialHistory: HistoryEntry[] = [{
@@ -38,30 +32,31 @@ export class MemStorage implements IStorage {
       action: "created"
     }];
 
-    const ticket: Ticket = {
-      id,
-      clientName: insertTicket.clientName,
-      clientEmail: insertTicket.clientEmail,
-      component: insertTicket.component,
-      brand: insertTicket.brand,
-      serialNumber: insertTicket.serialNumber || null,
-      problem: insertTicket.problem || null,
-      protocolNumber: insertTicket.protocolNumber || null,
-      approvalStatus: insertTicket.approvalStatus || null,
-      phase: insertTicket.phase,
-      shippingDate: insertTicket.shippingDate ? new Date(insertTicket.shippingDate) : null,
-      trackingNumber: insertTicket.trackingNumber || null,
-      shippingCompany: insertTicket.shippingCompany || null,
-      completionDate: insertTicket.completionDate ? new Date(insertTicket.completionDate) : null,
-      history: initialHistory,
-      createdAt: now,
-    };
-    this.tickets.set(id, ticket);
+    const [ticket] = await db
+      .insert(tickets)
+      .values({
+        clientName: insertTicket.clientName,
+        clientEmail: insertTicket.clientEmail,
+        component: insertTicket.component,
+        brand: insertTicket.brand,
+        serialNumber: insertTicket.serialNumber || null,
+        problem: insertTicket.problem || null,
+        protocolNumber: insertTicket.protocolNumber || null,
+        approvalStatus: insertTicket.approvalStatus || null,
+        phase: insertTicket.phase,
+        shippingDate: insertTicket.shippingDate ? new Date(insertTicket.shippingDate) : null,
+        trackingNumber: insertTicket.trackingNumber || null,
+        shippingCompany: insertTicket.shippingCompany || null,
+        completionDate: insertTicket.completionDate ? new Date(insertTicket.completionDate) : null,
+        history: initialHistory,
+      })
+      .returning();
+    
     return ticket;
   }
 
   async updateTicket(id: string, updateData: UpdateTicket): Promise<Ticket | undefined> {
-    const ticket = this.tickets.get(id);
+    const [ticket] = await db.select().from(tickets).where(eq(tickets.id, id));
     if (!ticket) return undefined;
 
     const now = new Date();
@@ -128,30 +123,34 @@ export class MemStorage implements IStorage {
       }
     });
 
-    const updatedTicket: Ticket = {
-      ...ticket,
-      clientName: updateData.clientName ?? ticket.clientName,
-      clientEmail: updateData.clientEmail ?? ticket.clientEmail,
-      component: updateData.component ?? ticket.component,
-      brand: updateData.brand ?? ticket.brand,
-      serialNumber: updateData.serialNumber !== undefined ? updateData.serialNumber || null : ticket.serialNumber,
-      problem: updateData.problem !== undefined ? updateData.problem || null : ticket.problem,
-      protocolNumber: updateData.protocolNumber !== undefined ? updateData.protocolNumber || null : ticket.protocolNumber,
-      approvalStatus: updateData.approvalStatus !== undefined ? updateData.approvalStatus || null : ticket.approvalStatus,
-      phase: updateData.phase ?? ticket.phase,
-      shippingDate: updateData.shippingDate !== undefined ? (updateData.shippingDate ? new Date(updateData.shippingDate) : null) : ticket.shippingDate,
-      trackingNumber: updateData.trackingNumber !== undefined ? updateData.trackingNumber || null : ticket.trackingNumber,
-      shippingCompany: updateData.shippingCompany !== undefined ? updateData.shippingCompany || null : ticket.shippingCompany,
-      completionDate: updateData.completionDate !== undefined ? (updateData.completionDate ? new Date(updateData.completionDate) : null) : ticket.completionDate,
-      history: newHistory,
-    };
-    this.tickets.set(id, updatedTicket);
+    const [updatedTicket] = await db
+      .update(tickets)
+      .set({
+        clientName: updateData.clientName ?? ticket.clientName,
+        clientEmail: updateData.clientEmail ?? ticket.clientEmail,
+        component: updateData.component ?? ticket.component,
+        brand: updateData.brand ?? ticket.brand,
+        serialNumber: updateData.serialNumber !== undefined ? updateData.serialNumber || null : ticket.serialNumber,
+        problem: updateData.problem !== undefined ? updateData.problem || null : ticket.problem,
+        protocolNumber: updateData.protocolNumber !== undefined ? updateData.protocolNumber || null : ticket.protocolNumber,
+        approvalStatus: updateData.approvalStatus !== undefined ? updateData.approvalStatus || null : ticket.approvalStatus,
+        phase: updateData.phase ?? ticket.phase,
+        shippingDate: updateData.shippingDate !== undefined ? (updateData.shippingDate ? new Date(updateData.shippingDate) : null) : ticket.shippingDate,
+        trackingNumber: updateData.trackingNumber !== undefined ? updateData.trackingNumber || null : ticket.trackingNumber,
+        shippingCompany: updateData.shippingCompany !== undefined ? updateData.shippingCompany || null : ticket.shippingCompany,
+        completionDate: updateData.completionDate !== undefined ? (updateData.completionDate ? new Date(updateData.completionDate) : null) : ticket.completionDate,
+        history: newHistory,
+      })
+      .where(eq(tickets.id, id))
+      .returning();
+    
     return updatedTicket;
   }
 
   async deleteTicket(id: string): Promise<boolean> {
-    return this.tickets.delete(id);
+    const result = await db.delete(tickets).where(eq(tickets.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
