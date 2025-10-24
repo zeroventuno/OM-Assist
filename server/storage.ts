@@ -27,7 +27,7 @@ export class DatabaseStorage implements IStorage {
     const initialHistory: HistoryEntry[] = [{
       field: "Ticket",
       oldValue: null,
-      newValue: "Criado",
+      newValue: "Creato",
       date: now.toISOString(),
       action: "created"
     }];
@@ -63,19 +63,19 @@ export class DatabaseStorage implements IStorage {
     const newHistory: HistoryEntry[] = [...(ticket.history || [])];
 
     const fieldLabels: Record<string, string> = {
-      clientName: "Nome do Cliente",
-      clientEmail: "Email do Cliente",
+      clientName: "Nome del Cliente",
+      clientEmail: "Email del Cliente",
       component: "Componente",
       brand: "Marca",
-      serialNumber: "Número de Série",
+      serialNumber: "Numero di Serie",
       problem: "Problema",
-      protocolNumber: "Nº Protocolo",
-      approvalStatus: "Status de Aprovação",
+      protocolNumber: "N° Protocollo",
+      approvalStatus: "Stato di Approvazione",
       phase: "Fase",
-      shippingDate: "Data de Envio",
+      shippingDate: "Data di Spedizione",
       trackingNumber: "Tracking",
-      shippingCompany: "Empresa de Envio",
-      completionDate: "Data de Conclusão"
+      shippingCompany: "Corriere",
+      completionDate: "Data di Completamento"
     };
 
     const formatValue = (value: any): string => {

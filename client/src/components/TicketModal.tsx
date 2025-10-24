@@ -38,7 +38,7 @@ export default function TicketModal({ open, onClose, ticket, onSubmit, isLoading
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="dialog-ticket-modal">
         <DialogHeader>
-          <DialogTitle>{ticket ? "Editar Ticket" : "Novo Ticket"}</DialogTitle>
+          <DialogTitle>{ticket ? "Modifica Ticket" : "Nuovo Ticket"}</DialogTitle>
         </DialogHeader>
         <TicketForm
           onSubmit={onSubmit}

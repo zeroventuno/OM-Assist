@@ -28,8 +28,8 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
           </svg>
         </div>
-        <h3 className="text-lg font-semibold mb-2">Nenhum ticket cadastrado</h3>
-        <p className="text-sm text-muted-foreground mb-6">Comece criando seu primeiro ticket de suporte</p>
+        <h3 className="text-lg font-semibold mb-2">Nessun ticket registrato</h3>
+        <p className="text-sm text-muted-foreground mb-6">Inizia creando il tuo primo ticket di supporto</p>
       </div>
     );
   }
@@ -37,18 +37,18 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
   const getApprovalBadge = (status: string | null) => {
     if (!status) return null;
     
-    if (status === "Aprovado") {
+    if (status === "Approvato") {
       return (
         <Badge className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300 border-green-200 dark:border-green-800 border">
-          Aprovado
+          Approvato
         </Badge>
       );
     }
     
-    if (status === "Negado") {
+    if (status === "Rifiutato") {
       return (
         <Badge className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-red-200 dark:border-red-800 border">
-          Negado
+          Rifiutato
         </Badge>
       );
     }
@@ -67,10 +67,10 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Cliente</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Componente</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Marca</th>
-              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Status</th>
+              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Stato</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Fase</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Data</th>
-              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Ações</th>
+              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Azioni</th>
             </tr>
           </thead>
           <tbody>
@@ -192,7 +192,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
                       ) : (
                         <ChevronRight className="w-4 h-4 mr-1" />
                       )}
-                      Histórico
+                      Cronologia
                     </Button>
                     <Button
                       size="sm"
@@ -201,7 +201,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
                       data-testid={`button-edit-mobile-${ticket.id}`}
                     >
                       <Pencil className="w-4 h-4 mr-1" />
-                      Editar
+                      Modifica
                     </Button>
                     <Button
                       size="sm"
@@ -210,7 +210,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
                       data-testid={`button-delete-mobile-${ticket.id}`}
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
-                      Deletar
+                      Elimina
                     </Button>
                   </div>
                 </div>

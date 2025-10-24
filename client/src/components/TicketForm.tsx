@@ -40,7 +40,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
       problem: "",
       protocolNumber: "",
       approvalStatus: undefined,
-      phase: "Entrada",
+      phase: "Ingresso",
       shippingDate: "",
       trackingNumber: "",
       shippingCompany: "",
@@ -51,12 +51,12 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
   const watchPhase = form.watch("phase");
 
   useEffect(() => {
-    if (watchPhase !== "Enviado") {
+    if (watchPhase !== "Spedito") {
       form.setValue("shippingDate", "");
       form.setValue("trackingNumber", "");
       form.setValue("shippingCompany", "");
     }
-    if (watchPhase !== "Finalizado") {
+    if (watchPhase !== "Completato") {
       form.setValue("completionDate", "");
       form.setValue("approvalStatus", undefined);
     }
@@ -71,9 +71,9 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             name="clientName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome do Cliente *</FormLabel>
+                <FormLabel>Nome del Cliente *</FormLabel>
                 <FormControl>
-                  <Input placeholder="João Silva" {...field} data-testid="input-client-name" />
+                  <Input placeholder="Mario Rossi" {...field} data-testid="input-client-name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,9 +85,9 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             name="clientEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email do Cliente *</FormLabel>
+                <FormLabel>Email del Cliente *</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="joao@email.com" {...field} data-testid="input-client-email" />
+                  <Input type="email" placeholder="mario@email.com" {...field} data-testid="input-client-email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,7 +103,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
               <FormItem>
                 <FormLabel>Componente *</FormLabel>
                 <FormControl>
-                  <Input placeholder="Freio Hidráulico" {...field} data-testid="input-component" />
+                  <Input placeholder="Freno Idraulico" {...field} data-testid="input-component" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -131,7 +131,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             name="serialNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Número de Série</FormLabel>
+                <FormLabel>Numero di Serie</FormLabel>
                 <FormControl>
                   <Input placeholder="SH-2024-001234" {...field} value={field.value || ""} data-testid="input-serial-number" />
                 </FormControl>
@@ -145,9 +145,9 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             name="protocolNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>N° Protocolo</FormLabel>
+                <FormLabel>N° Protocollo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Fornecido pela fabricante" {...field} value={field.value || ""} data-testid="input-protocol-number" />
+                  <Input placeholder="Fornito dal produttore" {...field} value={field.value || ""} data-testid="input-protocol-number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,10 +160,10 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
           name="problem"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Qual o Problema</FormLabel>
+              <FormLabel>Qual è il Problema</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Descreva o problema em detalhes..."
+                  placeholder="Descrivi il problema in dettaglio..."
                   className="min-h-[100px]"
                   {...field}
                   value={field.value || ""}
@@ -185,14 +185,14 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
                 <Select onValueChange={field.onChange} defaultValue={field.value} data-testid="select-phase">
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a fase" />
+                      <SelectValue placeholder="Seleziona la fase" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Entrada">Entrada</SelectItem>
-                    <SelectItem value="Enviado">Enviado</SelectItem>
-                    <SelectItem value="Em processamento">Em processamento</SelectItem>
-                    <SelectItem value="Finalizado">Finalizado</SelectItem>
+                    <SelectItem value="Ingresso">Ingresso</SelectItem>
+                    <SelectItem value="Spedito">Spedito</SelectItem>
+                    <SelectItem value="In lavorazione">In lavorazione</SelectItem>
+                    <SelectItem value="Completato">Completato</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -200,22 +200,22 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             )}
           />
 
-          {watchPhase === "Finalizado" && (
+          {watchPhase === "Completato" && (
             <FormField
               control={form.control}
               name="approvalStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status de Aprovação *</FormLabel>
+                  <FormLabel>Stato di Approvazione *</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value || undefined} data-testid="select-approval-status">
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione o status" />
+                        <SelectValue placeholder="Seleziona lo stato" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Aprovado">Aprovado</SelectItem>
-                      <SelectItem value="Negado">Negado</SelectItem>
+                      <SelectItem value="Approvato">Approvato</SelectItem>
+                      <SelectItem value="Rifiutato">Rifiutato</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -225,16 +225,16 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
           )}
         </div>
 
-        {watchPhase === "Enviado" && (
+        {watchPhase === "Spedito" && (
           <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-            <h3 className="font-medium text-sm">Informações de Envio</h3>
+            <h3 className="font-medium text-sm">Informazioni di Spedizione</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="shippingDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data do Envio</FormLabel>
+                    <FormLabel>Data di Spedizione</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} value={field.value || ""} data-testid="input-shipping-date" />
                     </FormControl>
@@ -250,7 +250,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
                   <FormItem>
                     <FormLabel>Tracking</FormLabel>
                     <FormControl>
-                      <Input placeholder="BR123456789" {...field} value={field.value || ""} data-testid="input-tracking-number" />
+                      <Input placeholder="IT123456789" {...field} value={field.value || ""} data-testid="input-tracking-number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -262,9 +262,9 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
                 name="shippingCompany"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Empresa de Envio</FormLabel>
+                    <FormLabel>Corriere</FormLabel>
                     <FormControl>
-                      <Input placeholder="Correios" {...field} value={field.value || ""} data-testid="input-shipping-company" />
+                      <Input placeholder="DHL" {...field} value={field.value || ""} data-testid="input-shipping-company" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -274,15 +274,15 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
           </div>
         )}
 
-        {watchPhase === "Finalizado" && (
+        {watchPhase === "Completato" && (
           <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-            <h3 className="font-medium text-sm">Informações de Finalização</h3>
+            <h3 className="font-medium text-sm">Informazioni di Completamento</h3>
             <FormField
               control={form.control}
               name="completionDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Data de Finalização</FormLabel>
+                  <FormLabel>Data di Completamento</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} value={field.value || ""} data-testid="input-completion-date" />
                   </FormControl>
@@ -296,11 +296,11 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
         <div className="flex justify-end gap-3 pt-4">
           {onCancel && (
             <Button type="button" variant="ghost" onClick={onCancel} disabled={isLoading} data-testid="button-cancel">
-              Cancelar
+              Annulla
             </Button>
           )}
           <Button type="submit" disabled={isLoading} data-testid="button-submit">
-            {isLoading ? "Salvando..." : defaultValues ? "Atualizar" : "Criar Ticket"}
+            {isLoading ? "Salvataggio..." : defaultValues ? "Aggiorna" : "Crea Ticket"}
           </Button>
         </div>
       </form>

@@ -19,7 +19,7 @@ export default function Header({ onNewTicket }: HeaderProps) {
         
         <Button onClick={onNewTicket} data-testid="button-new-ticket">
           <Plus className="w-4 h-4 mr-2" />
-          Novo Ticket
+          Nuovo Ticket
         </Button>
       </div>
     </header>

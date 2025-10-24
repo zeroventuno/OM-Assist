@@ -28,14 +28,14 @@ export default function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ["/api/tickets"] });
       setModalOpen(false);
       toast({
-        title: "Sucesso",
-        description: "Ticket criado com sucesso!",
+        title: "Successo",
+        description: "Ticket creato con successo!",
       });
     },
     onError: () => {
       toast({
-        title: "Erro",
-        description: "Erro ao criar ticket. Tente novamente.",
+        title: "Errore",
+        description: "Errore durante la creazione del ticket. Riprova.",
         variant: "destructive",
       });
     },
@@ -50,14 +50,14 @@ export default function Dashboard() {
       setModalOpen(false);
       setEditingTicket(null);
       toast({
-        title: "Sucesso",
-        description: "Ticket atualizado com sucesso!",
+        title: "Successo",
+        description: "Ticket aggiornato con successo!",
       });
     },
     onError: () => {
       toast({
-        title: "Erro",
-        description: "Erro ao atualizar ticket. Tente novamente.",
+        title: "Errore",
+        description: "Errore durante l'aggiornamento del ticket. Riprova.",
         variant: "destructive",
       });
     },
@@ -70,14 +70,14 @@ export default function Dashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tickets"] });
       toast({
-        title: "Sucesso",
-        description: "Ticket deletado com sucesso!",
+        title: "Successo",
+        description: "Ticket eliminato con successo!",
       });
     },
     onError: () => {
       toast({
-        title: "Erro",
-        description: "Erro ao deletar ticket. Tente novamente.",
+        title: "Errore",
+        description: "Errore durante l'eliminazione del ticket. Riprova.",
         variant: "destructive",
       });
     },
@@ -102,7 +102,7 @@ export default function Dashboard() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Tem certeza que deseja deletar este ticket?")) {
+    if (confirm("Sei sicuro di voler eliminare questo ticket?")) {
       deleteMutation.mutate(id);
     }
   };
@@ -125,12 +125,12 @@ export default function Dashboard() {
         <div className="mt-8 space-y-4">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <h2 className="text-2xl font-bold" style={{ fontFamily: 'Space Grotesk, var(--font-sans)' }}>
-              Tickets de Suporte
+              Ticket di Supporto
             </h2>
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar tickets..."
+                placeholder="Cerca ticket..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9"
@@ -142,7 +142,7 @@ export default function Dashboard() {
           <div className="border rounded-lg overflow-hidden">
             {isLoading ? (
               <div className="flex items-center justify-center py-16 text-muted-foreground">
-                Carregando tickets...
+                Caricamento ticket...
               </div>
             ) : (
               <TicketTable

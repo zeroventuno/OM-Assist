@@ -35,15 +35,15 @@ const baseTicketSchema = createInsertSchema(tickets).omit({
   createdAt: true,
   history: true,
 }).extend({
-  clientEmail: z.string().email("Email inválido"),
-  clientName: z.string().min(1, "Nome é obrigatório"),
-  component: z.string().min(1, "Componente é obrigatório"),
-  brand: z.string().min(1, "Marca é obrigatória"),
+  clientEmail: z.string().email("Email non valida"),
+  clientName: z.string().min(1, "Nome è obbligatorio"),
+  component: z.string().min(1, "Componente è obbligatorio"),
+  brand: z.string().min(1, "Marca è obbligatoria"),
   serialNumber: z.string().optional(),
   problem: z.string().optional(),
   protocolNumber: z.string().optional(),
-  approvalStatus: z.enum(["Aprovado", "Negado"]).optional(),
-  phase: z.enum(["Entrada", "Enviado", "Em processamento", "Finalizado"]),
+  approvalStatus: z.enum(["Approvato", "Rifiutato"]).optional(),
+  phase: z.enum(["Ingresso", "Spedito", "In lavorazione", "Completato"]),
   shippingDate: z.string().optional(),
   trackingNumber: z.string().optional(),
   shippingCompany: z.string().optional(),
@@ -51,22 +51,22 @@ const baseTicketSchema = createInsertSchema(tickets).omit({
 });
 
 export const insertTicketSchema = baseTicketSchema.refine((data) => {
-  if (data.phase === "Finalizado" && !data.approvalStatus) {
+  if (data.phase === "Completato" && !data.approvalStatus) {
     return false;
   }
   return true;
 }, {
-  message: "Status de aprovação é obrigatório para tickets finalizados",
+  message: "Stato di approvazione è obbligatorio per i ticket completati",
   path: ["approvalStatus"],
 });
 
 export const updateTicketSchema = baseTicketSchema.partial().refine((data) => {
-  if (data.phase === "Finalizado" && !data.approvalStatus) {
+  if (data.phase === "Completato" && !data.approvalStatus) {
     return false;
   }
   return true;
 }, {
-  message: "Status de aprovação é obrigatório para tickets finalizados",
+  message: "Stato di approvazione è obbligatorio per i ticket completati",
   path: ["approvalStatus"],
 });
 
