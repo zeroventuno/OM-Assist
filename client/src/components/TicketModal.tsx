@@ -25,7 +25,7 @@ export default function TicketModal({ open, onClose, ticket, onSubmit, isLoading
         serialNumber: ticket.serialNumber || "",
         problem: ticket.problem || "",
         protocolNumber: ticket.protocolNumber || "",
-        approvalStatus: (ticket.approvalStatus || "") as any,
+        approvalStatus: ticket.approvalStatus as any,
         phase: ticket.phase as any,
         shippingDate: ticket.shippingDate ? new Date(ticket.shippingDate).toISOString().split('T')[0] : "",
         trackingNumber: ticket.trackingNumber || "",

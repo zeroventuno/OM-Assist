@@ -32,7 +32,7 @@ export const insertTicketSchema = createInsertSchema(tickets).omit({
   serialNumber: z.string().optional(),
   problem: z.string().optional(),
   protocolNumber: z.string().optional(),
-  approvalStatus: z.enum(["Aprovado", "Negado", ""]).optional(),
+  approvalStatus: z.enum(["Aprovado", "Negado"]).optional(),
   phase: z.enum(["Entrada", "Enviado", "Em processamento", "Finalizado"]),
   shippingDate: z.string().optional(),
   trackingNumber: z.string().optional(),

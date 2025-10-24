@@ -39,7 +39,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
       serialNumber: "",
       problem: "",
       protocolNumber: "",
-      approvalStatus: "",
+      approvalStatus: undefined,
       phase: "Entrada",
       shippingDate: "",
       trackingNumber: "",
@@ -181,14 +181,13 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status de Aprovação</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value} data-testid="select-approval-status">
+                <Select onValueChange={field.onChange} value={field.value || undefined} data-testid="select-approval-status">
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o status" />
+                      <SelectValue placeholder="Não definido" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">Não definido</SelectItem>
                     <SelectItem value="Aprovado">Aprovado</SelectItem>
                     <SelectItem value="Negado">Negado</SelectItem>
                   </SelectContent>
