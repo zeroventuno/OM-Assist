@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertTicketSchema } from "@shared/schema";
+import { insertTicketSchema, updateTicketSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/tickets", async (_req, res) => {
@@ -29,7 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/tickets/:id", async (req, res) => {
     try {
-      const validatedData = insertTicketSchema.partial().parse(req.body);
+      const validatedData = updateTicketSchema.parse(req.body);
       const ticket = await storage.updateTicket(req.params.id, validatedData);
       if (!ticket) {
         return res.status(404).json({ message: "Ticket não encontrado" });

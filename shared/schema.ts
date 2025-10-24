@@ -1,7 +1,15 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export interface HistoryEntry {
+  field: string;
+  oldValue: any;
+  newValue: any;
+  date: string;
+  action: "created" | "updated";
+}
 
 export const tickets = pgTable("tickets", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -18,12 +26,14 @@ export const tickets = pgTable("tickets", {
   trackingNumber: text("tracking_number"),
   shippingCompany: text("shipping_company"),
   completionDate: timestamp("completion_date"),
+  history: jsonb("history").$type<HistoryEntry[]>(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const insertTicketSchema = createInsertSchema(tickets).omit({
+const baseTicketSchema = createInsertSchema(tickets).omit({
   id: true,
   createdAt: true,
+  history: true,
 }).extend({
   clientEmail: z.string().email("Email inválido"),
   clientName: z.string().min(1, "Nome é obrigatório"),
@@ -38,7 +48,19 @@ export const insertTicketSchema = createInsertSchema(tickets).omit({
   trackingNumber: z.string().optional(),
   shippingCompany: z.string().optional(),
   completionDate: z.string().optional(),
-}).refine((data) => {
+});
+
+export const insertTicketSchema = baseTicketSchema.refine((data) => {
+  if (data.phase === "Finalizado" && !data.approvalStatus) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Status de aprovação é obrigatório para tickets finalizados",
+  path: ["approvalStatus"],
+});
+
+export const updateTicketSchema = baseTicketSchema.partial().refine((data) => {
   if (data.phase === "Finalizado" && !data.approvalStatus) {
     return false;
   }
@@ -49,4 +71,5 @@ export const insertTicketSchema = createInsertSchema(tickets).omit({
 });
 
 export type InsertTicket = z.infer<typeof insertTicketSchema>;
+export type UpdateTicket = z.infer<typeof updateTicketSchema>;
 export type Ticket = typeof tickets.$inferSelect;

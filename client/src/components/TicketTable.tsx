@@ -1,10 +1,12 @@
 import { type Ticket } from "@shared/schema";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import StatusBadge from "./StatusBadge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useState, Fragment } from "react";
+import TicketHistory from "./TicketHistory";
 
 interface TicketTableProps {
   tickets: Ticket[];
@@ -13,6 +15,11 @@ interface TicketTableProps {
 }
 
 export default function TicketTable({ tickets, onEdit, onDelete }: TicketTableProps) {
+  const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
+
+  const toggleExpand = (ticketId: string) => {
+    setExpandedTicketId(expandedTicketId === ticketId ? null : ticketId);
+  };
   if (tickets.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -55,6 +62,7 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
         <table className="w-full">
           <thead>
             <tr className="border-b">
+              <th className="w-8"></th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">ID</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Cliente</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Componente</th>
@@ -66,106 +74,156 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
             </tr>
           </thead>
           <tbody>
-            {tickets.map((ticket) => (
-              <tr key={ticket.id} className="border-b hover-elevate" data-testid={`row-ticket-${ticket.id}`}>
-                <td className="py-4 px-4 text-sm font-mono text-muted-foreground" data-testid={`text-id-${ticket.id}`}>
-                  #{ticket.id.slice(0, 8)}
-                </td>
-                <td className="py-4 px-4 text-sm" data-testid={`text-client-name-${ticket.id}`}>{ticket.clientName}</td>
-                <td className="py-4 px-4 text-sm" data-testid={`text-component-${ticket.id}`}>{ticket.component}</td>
-                <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-brand-${ticket.id}`}>{ticket.brand}</td>
-                <td className="py-4 px-4">
-                  {getApprovalBadge(ticket.approvalStatus)}
-                </td>
-                <td className="py-4 px-4">
-                  <StatusBadge phase={ticket.phase as any} />
-                </td>
-                <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-date-${ticket.id}`}>
-                  {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
-                </td>
-                <td className="py-4 px-4">
-                  <div className="flex gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => onEdit(ticket)}
-                      data-testid={`button-edit-${ticket.id}`}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => onDelete(ticket.id)}
-                      data-testid={`button-delete-${ticket.id}`}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {tickets.map((ticket) => {
+              const isExpanded = expandedTicketId === ticket.id;
+              return (
+                <Fragment key={ticket.id}>
+                  <tr className="border-b hover-elevate" data-testid={`row-ticket-${ticket.id}`}>
+                    <td className="py-4 px-2">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => toggleExpand(ticket.id)}
+                        data-testid={`button-expand-${ticket.id}`}
+                      >
+                        {isExpanded ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </td>
+                    <td className="py-4 px-4 text-sm font-mono text-muted-foreground" data-testid={`text-id-${ticket.id}`}>
+                      #{ticket.id.slice(0, 8)}
+                    </td>
+                    <td className="py-4 px-4 text-sm" data-testid={`text-client-name-${ticket.id}`}>{ticket.clientName}</td>
+                    <td className="py-4 px-4 text-sm" data-testid={`text-component-${ticket.id}`}>{ticket.component}</td>
+                    <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-brand-${ticket.id}`}>{ticket.brand}</td>
+                    <td className="py-4 px-4">
+                      {getApprovalBadge(ticket.approvalStatus)}
+                    </td>
+                    <td className="py-4 px-4">
+                      <StatusBadge phase={ticket.phase as any} />
+                    </td>
+                    <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-date-${ticket.id}`}>
+                      {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex gap-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => onEdit(ticket)}
+                          data-testid={`button-edit-${ticket.id}`}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => onDelete(ticket.id)}
+                          data-testid={`button-delete-${ticket.id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                  {isExpanded && (
+                    <tr key={`${ticket.id}-history`}>
+                      <td colSpan={9} className="bg-muted/30 px-8 py-2">
+                        <TicketHistory history={ticket.history} />
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
       <div className="md:hidden space-y-4">
-        {tickets.map((ticket) => (
-          <div
-            key={ticket.id}
-            className="p-4 border rounded-lg space-y-3 hover-elevate"
-            data-testid={`card-ticket-${ticket.id}`}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="text-xs font-mono text-muted-foreground">#{ticket.id.slice(0, 8)}</span>
-                  <StatusBadge phase={ticket.phase as any} />
-                  {getApprovalBadge(ticket.approvalStatus)}
+        {tickets.map((ticket) => {
+          const isExpanded = expandedTicketId === ticket.id;
+          return (
+            <div
+              key={ticket.id}
+              className="border rounded-lg overflow-hidden"
+              data-testid={`card-ticket-${ticket.id}`}
+            >
+              <div className="p-4 space-y-3 hover-elevate">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="text-xs font-mono text-muted-foreground">#{ticket.id.slice(0, 8)}</span>
+                      <StatusBadge phase={ticket.phase as any} />
+                      {getApprovalBadge(ticket.approvalStatus)}
+                    </div>
+                    <h3 className="font-medium truncate">{ticket.clientName}</h3>
+                    <p className="text-sm text-muted-foreground truncate">{ticket.clientEmail}</p>
+                  </div>
                 </div>
-                <h3 className="font-medium truncate">{ticket.clientName}</h3>
-                <p className="text-sm text-muted-foreground truncate">{ticket.clientEmail}</p>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-muted-foreground">Componente:</span>
-                <p className="font-medium">{ticket.component}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Marca:</span>
-                <p className="font-medium">{ticket.brand}</p>
-              </div>
-            </div>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Componente:</span>
+                    <p className="font-medium">{ticket.component}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Marca:</span>
+                    <p className="font-medium">{ticket.brand}</p>
+                  </div>
+                </div>
 
-            <div className="flex items-center justify-between pt-2 border-t">
-              <span className="text-xs text-muted-foreground">
-                {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
-              </span>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onEdit(ticket)}
-                  data-testid={`button-edit-mobile-${ticket.id}`}
-                >
-                  <Pencil className="w-4 h-4 mr-1" />
-                  Editar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onDelete(ticket.id)}
-                  data-testid={`button-delete-mobile-${ticket.id}`}
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Deletar
-                </Button>
+                <div className="flex items-center justify-between pt-2 border-t gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                  </span>
+                  <div className="flex gap-1 flex-wrap">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => toggleExpand(ticket.id)}
+                      data-testid={`button-expand-mobile-${ticket.id}`}
+                    >
+                      {isExpanded ? (
+                        <ChevronDown className="w-4 h-4 mr-1" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 mr-1" />
+                      )}
+                      Histórico
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onEdit(ticket)}
+                      data-testid={`button-edit-mobile-${ticket.id}`}
+                    >
+                      <Pencil className="w-4 h-4 mr-1" />
+                      Editar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onDelete(ticket.id)}
+                      data-testid={`button-delete-mobile-${ticket.id}`}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Deletar
+                    </Button>
+                  </div>
+                </div>
               </div>
+              
+              {isExpanded && (
+                <div className="bg-muted/30 px-4 py-2 border-t">
+                  <TicketHistory history={ticket.history} />
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

@@ -1,11 +1,11 @@
-import { type Ticket, type InsertTicket } from "@shared/schema";
+import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
   getAllTickets(): Promise<Ticket[]>;
   getTicket(id: string): Promise<Ticket | undefined>;
   createTicket(ticket: InsertTicket): Promise<Ticket>;
-  updateTicket(id: string, ticket: Partial<InsertTicket>): Promise<Ticket | undefined>;
+  updateTicket(id: string, ticket: UpdateTicket): Promise<Ticket | undefined>;
   deleteTicket(id: string): Promise<boolean>;
 }
 
@@ -28,6 +28,16 @@ export class MemStorage implements IStorage {
 
   async createTicket(insertTicket: InsertTicket): Promise<Ticket> {
     const id = randomUUID();
+    const now = new Date();
+    
+    const initialHistory: HistoryEntry[] = [{
+      field: "Ticket",
+      oldValue: null,
+      newValue: "Criado",
+      date: now.toISOString(),
+      action: "created"
+    }];
+
     const ticket: Ticket = {
       id,
       clientName: insertTicket.clientName,
@@ -43,15 +53,80 @@ export class MemStorage implements IStorage {
       trackingNumber: insertTicket.trackingNumber || null,
       shippingCompany: insertTicket.shippingCompany || null,
       completionDate: insertTicket.completionDate ? new Date(insertTicket.completionDate) : null,
-      createdAt: new Date(),
+      history: initialHistory,
+      createdAt: now,
     };
     this.tickets.set(id, ticket);
     return ticket;
   }
 
-  async updateTicket(id: string, updateData: Partial<InsertTicket>): Promise<Ticket | undefined> {
+  async updateTicket(id: string, updateData: UpdateTicket): Promise<Ticket | undefined> {
     const ticket = this.tickets.get(id);
     if (!ticket) return undefined;
+
+    const now = new Date();
+    const newHistory: HistoryEntry[] = [...(ticket.history || [])];
+
+    const fieldLabels: Record<string, string> = {
+      clientName: "Nome do Cliente",
+      clientEmail: "Email do Cliente",
+      component: "Componente",
+      brand: "Marca",
+      serialNumber: "Número de Série",
+      problem: "Problema",
+      protocolNumber: "Nº Protocolo",
+      approvalStatus: "Status de Aprovação",
+      phase: "Fase",
+      shippingDate: "Data de Envio",
+      trackingNumber: "Tracking",
+      shippingCompany: "Empresa de Envio",
+      completionDate: "Data de Conclusão"
+    };
+
+    const formatValue = (value: any): string => {
+      if (value === null || value === undefined || value === "") return "-";
+      if (value instanceof Date) return value.toISOString();
+      return String(value);
+    };
+
+    const normalizeDateForComparison = (value: any): string => {
+      if (value === null || value === undefined || value === "") return "-";
+      if (value instanceof Date) return value.toISOString().split('T')[0];
+      if (typeof value === 'string' && value.includes('-')) {
+        return value.split('T')[0];
+      }
+      return String(value);
+    };
+
+    const isDateField = (key: string): boolean => {
+      return key === 'shippingDate' || key === 'completionDate';
+    };
+
+    Object.keys(updateData).forEach((key) => {
+      const oldValue = (ticket as any)[key];
+      const newValue = (updateData as any)[key];
+      
+      let formattedOldValue: string;
+      let formattedNewValue: string;
+
+      if (isDateField(key)) {
+        formattedOldValue = normalizeDateForComparison(oldValue);
+        formattedNewValue = normalizeDateForComparison(newValue);
+      } else {
+        formattedOldValue = formatValue(oldValue);
+        formattedNewValue = formatValue(newValue);
+      }
+
+      if (formattedOldValue !== formattedNewValue) {
+        newHistory.push({
+          field: fieldLabels[key] || key,
+          oldValue: formattedOldValue,
+          newValue: formattedNewValue,
+          date: now.toISOString(),
+          action: "updated"
+        });
+      }
+    });
 
     const updatedTicket: Ticket = {
       ...ticket,
@@ -68,6 +143,7 @@ export class MemStorage implements IStorage {
       trackingNumber: updateData.trackingNumber !== undefined ? updateData.trackingNumber || null : ticket.trackingNumber,
       shippingCompany: updateData.shippingCompany !== undefined ? updateData.shippingCompany || null : ticket.shippingCompany,
       completionDate: updateData.completionDate !== undefined ? (updateData.completionDate ? new Date(updateData.completionDate) : null) : ticket.completionDate,
+      history: newHistory,
     };
     this.tickets.set(id, updatedTicket);
     return updatedTicket;
