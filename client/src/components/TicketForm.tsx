@@ -58,6 +58,7 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
     }
     if (watchPhase !== "Finalizado") {
       form.setValue("completionDate", "");
+      form.setValue("approvalStatus", undefined);
     }
   }, [watchPhase, form]);
 
@@ -177,28 +178,6 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="approvalStatus"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status de Aprovação</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value || undefined} data-testid="select-approval-status">
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Não definido" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Aprovado">Aprovado</SelectItem>
-                    <SelectItem value="Negado">Negado</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="phase"
             render={({ field }) => (
               <FormItem>
@@ -220,6 +199,30 @@ export default function TicketForm({ onSubmit, onCancel, defaultValues, isLoadin
               </FormItem>
             )}
           />
+
+          {watchPhase === "Finalizado" && (
+            <FormField
+              control={form.control}
+              name="approvalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status de Aprovação *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value || undefined} data-testid="select-approval-status">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Aprovado">Aprovado</SelectItem>
+                      <SelectItem value="Negado">Negado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
         {watchPhase === "Enviado" && (

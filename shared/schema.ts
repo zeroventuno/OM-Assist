@@ -38,6 +38,14 @@ export const insertTicketSchema = createInsertSchema(tickets).omit({
   trackingNumber: z.string().optional(),
   shippingCompany: z.string().optional(),
   completionDate: z.string().optional(),
+}).refine((data) => {
+  if (data.phase === "Finalizado" && !data.approvalStatus) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Status de aprovação é obrigatório para tickets finalizados",
+  path: ["approvalStatus"],
 });
 
 export type InsertTicket = z.infer<typeof insertTicketSchema>;
