@@ -112,7 +112,7 @@ export default function Dashboard() {
     ticket.clientEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ticket.component.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ticket.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ticket.status.toLowerCase().includes(searchTerm.toLowerCase())
+    ticket.phase.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

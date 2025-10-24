@@ -9,8 +9,15 @@ export const tickets = pgTable("tickets", {
   clientEmail: text("client_email").notNull(),
   component: text("component").notNull(),
   brand: text("brand").notNull(),
-  serialNumber: text("serial_number").notNull(),
-  status: text("status").notNull(),
+  serialNumber: text("serial_number"),
+  problem: text("problem"),
+  protocolNumber: text("protocol_number"),
+  approvalStatus: text("approval_status"),
+  phase: text("phase").notNull(),
+  shippingDate: timestamp("shipping_date"),
+  trackingNumber: text("tracking_number"),
+  shippingCompany: text("shipping_company"),
+  completionDate: timestamp("completion_date"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -22,8 +29,15 @@ export const insertTicketSchema = createInsertSchema(tickets).omit({
   clientName: z.string().min(1, "Nome é obrigatório"),
   component: z.string().min(1, "Componente é obrigatório"),
   brand: z.string().min(1, "Marca é obrigatória"),
-  serialNumber: z.string().min(1, "Número de série é obrigatório"),
-  status: z.enum(["Entrada", "Cadastro", "Em processamento", "Aprovado", "Negado", "Finalizado"]),
+  serialNumber: z.string().optional(),
+  problem: z.string().optional(),
+  protocolNumber: z.string().optional(),
+  approvalStatus: z.enum(["Aprovado", "Negado", ""]).optional(),
+  phase: z.enum(["Entrada", "Enviado", "Em processamento", "Finalizado"]),
+  shippingDate: z.string().optional(),
+  trackingNumber: z.string().optional(),
+  shippingCompany: z.string().optional(),
+  completionDate: z.string().optional(),
 });
 
 export type InsertTicket = z.infer<typeof insertTicketSchema>;

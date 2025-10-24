@@ -1,11 +1,11 @@
 import DashboardMetrics from '../DashboardMetrics';
 
 const mockTickets = [
-  { id: "1", status: "Entrada" },
-  { id: "2", status: "Em processamento" },
-  { id: "3", status: "Em processamento" },
-  { id: "4", status: "Aprovado" },
-  { id: "5", status: "Finalizado" },
+  { id: "1", phase: "Entrada", approvalStatus: null },
+  { id: "2", phase: "Em processamento", approvalStatus: null },
+  { id: "3", phase: "Em processamento", approvalStatus: "Aprovado" },
+  { id: "4", phase: "Enviado", approvalStatus: "Aprovado" },
+  { id: "5", phase: "Finalizado", approvalStatus: "Aprovado" },
 ];
 
 export default function DashboardMetricsExample() {

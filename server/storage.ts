@@ -29,8 +29,20 @@ export class MemStorage implements IStorage {
   async createTicket(insertTicket: InsertTicket): Promise<Ticket> {
     const id = randomUUID();
     const ticket: Ticket = {
-      ...insertTicket,
       id,
+      clientName: insertTicket.clientName,
+      clientEmail: insertTicket.clientEmail,
+      component: insertTicket.component,
+      brand: insertTicket.brand,
+      serialNumber: insertTicket.serialNumber || null,
+      problem: insertTicket.problem || null,
+      protocolNumber: insertTicket.protocolNumber || null,
+      approvalStatus: insertTicket.approvalStatus || null,
+      phase: insertTicket.phase,
+      shippingDate: insertTicket.shippingDate ? new Date(insertTicket.shippingDate) : null,
+      trackingNumber: insertTicket.trackingNumber || null,
+      shippingCompany: insertTicket.shippingCompany || null,
+      completionDate: insertTicket.completionDate ? new Date(insertTicket.completionDate) : null,
       createdAt: new Date(),
     };
     this.tickets.set(id, ticket);
@@ -43,7 +55,19 @@ export class MemStorage implements IStorage {
 
     const updatedTicket: Ticket = {
       ...ticket,
-      ...updateData,
+      clientName: updateData.clientName ?? ticket.clientName,
+      clientEmail: updateData.clientEmail ?? ticket.clientEmail,
+      component: updateData.component ?? ticket.component,
+      brand: updateData.brand ?? ticket.brand,
+      serialNumber: updateData.serialNumber !== undefined ? updateData.serialNumber || null : ticket.serialNumber,
+      problem: updateData.problem !== undefined ? updateData.problem || null : ticket.problem,
+      protocolNumber: updateData.protocolNumber !== undefined ? updateData.protocolNumber || null : ticket.protocolNumber,
+      approvalStatus: updateData.approvalStatus !== undefined ? updateData.approvalStatus || null : ticket.approvalStatus,
+      phase: updateData.phase ?? ticket.phase,
+      shippingDate: updateData.shippingDate !== undefined ? (updateData.shippingDate ? new Date(updateData.shippingDate) : null) : ticket.shippingDate,
+      trackingNumber: updateData.trackingNumber !== undefined ? updateData.trackingNumber || null : ticket.trackingNumber,
+      shippingCompany: updateData.shippingCompany !== undefined ? updateData.shippingCompany || null : ticket.shippingCompany,
+      completionDate: updateData.completionDate !== undefined ? (updateData.completionDate ? new Date(updateData.completionDate) : null) : ticket.completionDate,
     };
     this.tickets.set(id, updatedTicket);
     return updatedTicket;

@@ -6,20 +6,23 @@ interface DashboardMetricsProps {
 }
 
 export default function DashboardMetrics({ tickets }: DashboardMetricsProps) {
-  const statusCounts = {
-    entrada: tickets.filter((t) => t.status === "Entrada").length,
-    cadastro: tickets.filter((t) => t.status === "Cadastro").length,
-    processamento: tickets.filter((t) => t.status === "Em processamento").length,
-    aprovado: tickets.filter((t) => t.status === "Aprovado").length,
-    negado: tickets.filter((t) => t.status === "Negado").length,
-    finalizado: tickets.filter((t) => t.status === "Finalizado").length,
+  const phaseCounts = {
+    entrada: tickets.filter((t) => t.phase === "Entrada").length,
+    enviado: tickets.filter((t) => t.phase === "Enviado").length,
+    processamento: tickets.filter((t) => t.phase === "Em processamento").length,
+    finalizado: tickets.filter((t) => t.phase === "Finalizado").length,
+  };
+
+  const approvalCounts = {
+    aprovado: tickets.filter((t) => t.approvalStatus === "Aprovado").length,
+    negado: tickets.filter((t) => t.approvalStatus === "Negado").length,
   };
 
   const metrics = [
     { title: "Total", value: tickets.length, color: "text-primary" },
-    { title: "Em Processamento", value: statusCounts.processamento, color: "text-amber-600 dark:text-amber-400" },
-    { title: "Aprovados", value: statusCounts.aprovado, color: "text-green-600 dark:text-green-400" },
-    { title: "Finalizados", value: statusCounts.finalizado, color: "text-muted-foreground" },
+    { title: "Em Processamento", value: phaseCounts.processamento, color: "text-amber-600 dark:text-amber-400" },
+    { title: "Aprovados", value: approvalCounts.aprovado, color: "text-green-600 dark:text-green-400" },
+    { title: "Finalizados", value: phaseCounts.finalizado, color: "text-muted-foreground" },
   ];
 
   return (

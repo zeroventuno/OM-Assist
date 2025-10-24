@@ -1,6 +1,7 @@
 import { type Ticket } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import StatusBadge from "./StatusBadge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -26,6 +27,28 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
     );
   }
 
+  const getApprovalBadge = (status: string | null) => {
+    if (!status) return null;
+    
+    if (status === "Aprovado") {
+      return (
+        <Badge className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300 border-green-200 dark:border-green-800 border">
+          Aprovado
+        </Badge>
+      );
+    }
+    
+    if (status === "Negado") {
+      return (
+        <Badge className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-red-200 dark:border-red-800 border">
+          Negado
+        </Badge>
+      );
+    }
+    
+    return null;
+  };
+
   return (
     <>
       <div className="hidden md:block overflow-x-auto">
@@ -34,10 +57,10 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
             <tr className="border-b">
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">ID</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Cliente</th>
-              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Email</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Componente</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Marca</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Status</th>
+              <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Fase</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Data</th>
               <th className="text-left text-xs font-semibold uppercase tracking-wide py-3 px-4 text-muted-foreground">Ações</th>
             </tr>
@@ -49,11 +72,13 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
                   #{ticket.id.slice(0, 8)}
                 </td>
                 <td className="py-4 px-4 text-sm" data-testid={`text-client-name-${ticket.id}`}>{ticket.clientName}</td>
-                <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-email-${ticket.id}`}>{ticket.clientEmail}</td>
                 <td className="py-4 px-4 text-sm" data-testid={`text-component-${ticket.id}`}>{ticket.component}</td>
                 <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-brand-${ticket.id}`}>{ticket.brand}</td>
                 <td className="py-4 px-4">
-                  <StatusBadge status={ticket.status as any} />
+                  {getApprovalBadge(ticket.approvalStatus)}
+                </td>
+                <td className="py-4 px-4">
+                  <StatusBadge phase={ticket.phase as any} />
                 </td>
                 <td className="py-4 px-4 text-sm text-muted-foreground" data-testid={`text-date-${ticket.id}`}>
                   {format(new Date(ticket.createdAt), "dd/MM/yyyy", { locale: ptBR })}
@@ -93,9 +118,10 @@ export default function TicketTable({ tickets, onEdit, onDelete }: TicketTablePr
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span className="text-xs font-mono text-muted-foreground">#{ticket.id.slice(0, 8)}</span>
-                  <StatusBadge status={ticket.status as any} />
+                  <StatusBadge phase={ticket.phase as any} />
+                  {getApprovalBadge(ticket.approvalStatus)}
                 </div>
                 <h3 className="font-medium truncate">{ticket.clientName}</h3>
                 <p className="text-sm text-muted-foreground truncate">{ticket.clientEmail}</p>

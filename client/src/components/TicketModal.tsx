@@ -22,8 +22,15 @@ export default function TicketModal({ open, onClose, ticket, onSubmit, isLoading
         clientEmail: ticket.clientEmail,
         component: ticket.component,
         brand: ticket.brand,
-        serialNumber: ticket.serialNumber,
-        status: ticket.status as any,
+        serialNumber: ticket.serialNumber || "",
+        problem: ticket.problem || "",
+        protocolNumber: ticket.protocolNumber || "",
+        approvalStatus: (ticket.approvalStatus || "") as any,
+        phase: ticket.phase as any,
+        shippingDate: ticket.shippingDate ? new Date(ticket.shippingDate).toISOString().split('T')[0] : "",
+        trackingNumber: ticket.trackingNumber || "",
+        shippingCompany: ticket.shippingCompany || "",
+        completionDate: ticket.completionDate ? new Date(ticket.completionDate).toISOString().split('T')[0] : "",
       }
     : undefined;
 
