@@ -44,8 +44,9 @@ Preferred communication style: Simple, everyday language.
 
 **Data Access Pattern**
 - Abstracted storage interface (`IStorage`) allowing for different implementations
-- Current implementation uses in-memory storage (`MemStorage`) with Map-based data structure
-- Designed to support migration to database-backed storage (Drizzle ORM + PostgreSQL schema already defined)
+- Current implementation uses **PostgreSQL database** via `DatabaseStorage`
+- Database connection managed through Drizzle ORM with Neon serverless driver
+- All data persists between server restarts
 
 **API Endpoints**
 - `GET /api/tickets` - Retrieve all tickets (sorted by creation date)
@@ -57,7 +58,7 @@ Preferred communication style: Simple, everyday language.
 **Validation & Schema**
 - Shared schema definitions between client and server using Zod
 - Schema located in `/shared/schema.ts` for type consistency
-- Request validation at API boundary using `insertTicketSchema`
+- Request validation at API boundary using `insertTicketSchema` and `updateTicketSchema`
 
 ### Data Model
 
@@ -77,23 +78,25 @@ Preferred communication style: Simple, everyday language.
 - Supports "created" and "updated" actions
 - Enables full audit trail of ticket lifecycle
 
-### Database Architecture (Configured but not currently active)
+### Database Architecture
 
 **ORM: Drizzle**
 - Schema defined in `shared/schema.ts` using Drizzle's PostgreSQL schema builder
 - Migration system configured via `drizzle.config.ts`
-- Targets PostgreSQL database (Neon serverless driver configured)
+- PostgreSQL database with Neon serverless driver (`@neondatabase/serverless`)
+- Database connection via `server/db.ts`
 
 **Schema Design**
 - Single `tickets` table with JSONB column for flexible history storage
-- UUID primary keys with automatic generation
+- UUID primary keys (varchar) with automatic generation via `gen_random_uuid()`
 - Timestamp columns with automatic `defaultNow()`
 - Text fields for most data with optional values as nullable columns
+- JSONB `history` column stores array of HistoryEntry objects for complete audit trail
 
 **Migration Strategy**
-- Schema changes tracked in `/migrations` directory
-- Push-based workflow via `db:push` script
+- Push-based workflow via `db:push` script (no manual migrations)
 - Environment-based database connection via `DATABASE_URL`
+- All data persists across server restarts
 
 ### Development & Build Pipeline
 
