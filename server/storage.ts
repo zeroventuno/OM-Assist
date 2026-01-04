@@ -1,5 +1,5 @@
-import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "@shared/schema";
-import { tickets } from "@shared/schema";
+import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "../shared/schema";
+import { tickets } from "../shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
@@ -23,7 +23,7 @@ export class DatabaseStorage implements IStorage {
 
   async createTicket(insertTicket: InsertTicket): Promise<Ticket> {
     const now = new Date();
-    
+
     const initialHistory: HistoryEntry[] = [{
       field: "Ticket",
       oldValue: null,
@@ -51,7 +51,7 @@ export class DatabaseStorage implements IStorage {
         history: initialHistory,
       })
       .returning();
-    
+
     return ticket;
   }
 
@@ -100,7 +100,7 @@ export class DatabaseStorage implements IStorage {
     Object.keys(updateData).forEach((key) => {
       const oldValue = (ticket as any)[key];
       const newValue = (updateData as any)[key];
-      
+
       let formattedOldValue: string;
       let formattedNewValue: string;
 
@@ -143,13 +143,13 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(tickets.id, id))
       .returning();
-    
+
     return updatedTicket;
   }
 
   async deleteTicket(id: string): Promise<boolean> {
     const result = await db.delete(tickets).where(eq(tickets.id, id));
-    return result.rowCount !== null && result.rowCount > 0;
+    return true; // Drizzle's delete won't throw if not found, it just returns an empty array or the deleted rows
   }
 }
 

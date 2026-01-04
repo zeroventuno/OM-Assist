@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertTicketSchema, updateTicketSchema } from "@shared/schema";
+import { insertTicketSchema, updateTicketSchema } from "../shared/schema";
 
 export function registerRoutes(app: Express): Server {
   app.get("/api/tickets", async (_req, res) => {
