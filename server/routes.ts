@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertTicketSchema, updateTicketSchema } from "@shared/schema";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function registerRoutes(app: Express): Server {
   app.get("/api/tickets", async (_req, res) => {
     const tickets = await storage.getAllTickets();
     res.json(tickets);
