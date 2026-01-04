@@ -1,6 +1,6 @@
-import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "../shared/schema";
-import { tickets } from "../shared/schema";
-import { db } from "./db";
+import { type Ticket, type InsertTicket, type UpdateTicket, type HistoryEntry } from "../shared/schema.js";
+import { tickets } from "../shared/schema.js";
+import { db } from "./db.js";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {

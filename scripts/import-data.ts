@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
-import { db } from '../server/db';
-import { tickets } from '../shared/schema';
+import { db } from '../server/db.js';
+import { tickets } from '../shared/schema.js';
 
 async function importData() {
     const ticketsPath = path.resolve(process.cwd(), 'tickets.json');
