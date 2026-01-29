@@ -56,7 +56,7 @@ export const insertTicketSchema = baseTicketSchema.refine((data) => {
   }
   return true;
 }, {
-  message: "Stato di approvazione è obbligatorio per i ticket completati",
+  message: "Stato di approvazione è obrigatòrio per i ticket completati",
   path: ["approvalStatus"],
 });
 
@@ -66,10 +66,48 @@ export const updateTicketSchema = baseTicketSchema.partial().refine((data) => {
   }
   return true;
 }, {
-  message: "Stato di approvazione è obbligatorio per i ticket completati",
+  message: "Stato di approvazione è obrigatòrio per i ticket completati",
   path: ["approvalStatus"],
 });
 
 export type InsertTicket = z.infer<typeof insertTicketSchema>;
 export type UpdateTicket = z.infer<typeof updateTicketSchema>;
 export type Ticket = typeof tickets.$inferSelect;
+
+export const warranties = pgTable("warranties", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  startDate: timestamp("start_date").notNull().defaultNow(),
+  customerName: text("customer_name").notNull(),
+  email: text("email").notNull(),
+  agent: text("agent").notNull(),
+  serialNumber: text("serial_number").notNull(),
+  bikeModel: text("bike_model").notNull(),
+  size: text("size").notNull(),
+  problem: text("problem").notNull(),
+  observation: text("observation"),
+  paintDetails: text("paint_details"),
+  componentsDescription: text("components_description"),
+  protocolNumber: text("protocol_number").unique(),
+  status: text("status").notNull().default("In attesa"),
+  solution: text("solution"),
+  producer: text("producer"),
+  newSerialNumber: text("new_serial_number"),
+  history: jsonb("history").$type<HistoryEntry[]>(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertWarrantySchema = createInsertSchema(warranties).omit({
+  id: true,
+  createdAt: true,
+  history: true,
+  protocolNumber: true,
+}).extend({
+  email: z.string().email("Email non valida"),
+  startDate: z.string().optional().or(z.date()),
+});
+
+export const updateWarrantySchema = insertWarrantySchema.partial();
+
+export type InsertWarranty = z.infer<typeof insertWarrantySchema>;
+export type UpdateWarranty = z.infer<typeof updateWarrantySchema>;
+export type Warranty = typeof warranties.$inferSelect;

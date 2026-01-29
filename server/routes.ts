@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage.js";
-import { insertTicketSchema, updateTicketSchema } from "../shared/schema.js";
+import { insertTicketSchema, updateTicketSchema, insertWarrantySchema, updateWarrantySchema } from "../shared/schema.js";
 
 export function registerRoutes(app: Express): Server {
   app.get("/api/tickets", async (_req, res) => {
@@ -44,6 +44,51 @@ export function registerRoutes(app: Express): Server {
     const success = await storage.deleteTicket(req.params.id);
     if (!success) {
       return res.status(404).json({ message: "Ticket não encontrado" });
+    }
+    res.status(204).send();
+  });
+
+  // Warranty Routes
+  app.get("/api/warranties", async (_req, res) => {
+    const warranties = await storage.getAllWarranties();
+    res.json(warranties);
+  });
+
+  app.get("/api/warranties/:id", async (req, res) => {
+    const warranty = await storage.getWarranty(req.params.id);
+    if (!warranty) {
+      return res.status(404).json({ message: "Garanzia non trovata" });
+    }
+    res.json(warranty);
+  });
+
+  app.post("/api/warranties", async (req, res) => {
+    try {
+      const validatedData = insertWarrantySchema.parse(req.body);
+      const warranty = await storage.createWarranty(validatedData);
+      res.status(201).json(warranty);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/warranties/:id", async (req, res) => {
+    try {
+      const validatedData = updateWarrantySchema.parse(req.body);
+      const warranty = await storage.updateWarranty(req.params.id, validatedData);
+      if (!warranty) {
+        return res.status(404).json({ message: "Garanzia non trovata" });
+      }
+      res.json(warranty);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/warranties/:id", async (req, res) => {
+    const success = await storage.deleteWarranty(req.params.id);
+    if (!success) {
+      return res.status(404).json({ message: "Garanzia non trovata" });
     }
     res.status(204).send();
   });
