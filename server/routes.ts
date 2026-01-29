@@ -68,6 +68,7 @@ export function registerRoutes(app: Express): Server {
       const warranty = await storage.createWarranty(validatedData);
       res.status(201).json(warranty);
     } catch (error: any) {
+      console.error("Error creating warranty:", error);
       res.status(400).json({ message: error.message });
     }
   });

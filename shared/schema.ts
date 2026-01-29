@@ -103,7 +103,7 @@ export const insertWarrantySchema = createInsertSchema(warranties).omit({
   protocolNumber: true,
 }).extend({
   email: z.string().email("Email non valida"),
-  startDate: z.string().optional().or(z.date()),
+  startDate: z.string().nullable().optional().or(z.date()),
 });
 
 export const updateWarrantySchema = insertWarrantySchema.partial();
