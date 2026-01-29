@@ -176,7 +176,7 @@ export class DatabaseStorage implements IStorage {
     // Simple sequential protocol generation
     const allWarranties = await this.getAllWarranties();
     const count = allWarranties.length + 1;
-    const protocolNumber = `OMW-${year}-${count.toString().padStart(4, '0')}`;
+    const protocolNumber = `OMW-${year}-${count.toString().padStart(3, '0')}`;
 
     const initialHistory: HistoryEntry[] = [{
       field: "Garanzia",

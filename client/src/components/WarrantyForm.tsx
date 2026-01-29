@@ -20,6 +20,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, User, ClipboardList, Info, Factory, Wrench } from "lucide-react";
 
 interface WarrantyFormProps {
     onSubmit: (data: InsertWarranty) => void;
@@ -84,278 +88,313 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="startDate"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Data Inizio *</FormLabel>
-                                <FormControl>
-                                    <Input type="date" {...field} value={field.value as string || ""} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="agent"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Agente *</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Nome Agente" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="customerName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Cliente *</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Mario Rossi" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email *</FormLabel>
-                                <FormControl>
-                                    <Input type="email" placeholder="mario@email.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
-                    <h3 className="font-semibold text-sm">Dettagli Bicicletta</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <FormField
-                            control={form.control}
-                            name="serialNumber"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel># Serial *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Serial #" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="bikeModel"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Modello Bicicletta *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Modello" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="size"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Taglia *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Es: 54, L" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
-
-                <FormField
-                    control={form.control}
-                    name="problem"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Problema *</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Descrivi il problema..."
-                                    className="min-h-[80px]"
-                                    {...field}
+                <div className="space-y-8">
+                    {/* Sezione Informazioni Generali */}
+                    <Card className="border-muted/40 shadow-sm overflow-hidden">
+                        <div className="bg-muted/30 px-4 py-2 border-b flex items-center gap-2">
+                            <Info className="w-4 h-4 text-primary" />
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Informazioni Generali</h3>
+                        </div>
+                        <CardContent className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="startDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                                                <Calendar className="w-4 h-4 text-muted-foreground" />
+                                                Data Inizio *
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input type="date" {...field} value={field.value as string || ""} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="paintDetails"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Dati della Pittura</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="Codice colore, finitura..."
-                                        className="min-h-[80px]"
-                                        {...field}
-                                        value={field.value || ""}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="componentsDescription"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Componenti Montati</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="Gruppo, ruote, sella..."
-                                        className="min-h-[80px]"
-                                        {...field}
-                                        value={field.value || ""}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                <FormField
-                    control={form.control}
-                    name="observation"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Osservazione</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Note aggiuntive..."
-                                    className="min-h-[60px]"
-                                    {...field}
-                                    value={field.value || ""}
+                                <FormField
+                                    control={form.control}
+                                    name="agent"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                                                <User className="w-4 h-4 text-muted-foreground" />
+                                                Agente *
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Nome Agente" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
-                <div className="space-y-4 p-4 border rounded-lg bg-primary/5">
-                    <h3 className="font-semibold text-sm">Aggiornamento Processo</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                            control={form.control}
-                            name="solution"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Soluzione</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value || undefined}>
+                                <FormField
+                                    control={form.control}
+                                    name="customerName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Cliente *</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Mario Rossi" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Email *</FormLabel>
+                                            <FormControl>
+                                                <Input type="email" placeholder="mario@email.com" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Sezione Dettagli Bicicletta */}
+                    <Card className="border-muted/40 shadow-sm overflow-hidden">
+                        <div className="bg-muted/30 px-4 py-2 border-b flex items-center gap-2">
+                            <ClipboardList className="w-4 h-4 text-primary" />
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Dettagli Bicicletta</h3>
+                        </div>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="serialNumber"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">N° Serial *</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Serial #" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="bikeModel"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Modello *</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Es: F12, Dogma..." {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="size"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Taglia *</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Es: 54, L" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <FormField
+                                control={form.control}
+                                name="problem"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-medium">Descrizione del Problema *</FormLabel>
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Seleziona una soluzione" />
-                                            </SelectTrigger>
+                                            <Textarea
+                                                placeholder="Descrivi dettagliatamente il problema..."
+                                                className="min-h-[100px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all"
+                                                {...field}
+                                            />
                                         </FormControl>
-                                        <SelectContent>
-                                            {SOLUTIONS.map(s => (
-                                                <SelectItem key={s} value={s}>{s}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="producer"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Produttore Coinvolto</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value || undefined}>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="paintDetails"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Dati della Verniciatura</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    placeholder="Codice colore, finitura..."
+                                                    className="min-h-[80px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                                                    {...field}
+                                                    value={field.value || ""}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="componentsDescription"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Componenti Montati</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    placeholder="Gruppo, ruote, sella..."
+                                                    className="min-h-[80px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                                                    {...field}
+                                                    value={field.value || ""}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <FormField
+                                control={form.control}
+                                name="observation"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-medium">Osservazioni Aggiuntive</FormLabel>
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Seleziona un produttore" />
-                                            </SelectTrigger>
+                                            <Textarea
+                                                placeholder="Note supplementari..."
+                                                className="min-h-[60px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                                                {...field}
+                                                value={field.value || ""}
+                                            />
                                         </FormControl>
-                                        <SelectContent>
-                                            {PRODUCERS.map(p => (
-                                                <SelectItem key={p} value={p}>{p}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
 
-                    {watchSolution === "Substituição" && (
-                        <FormField
-                            control={form.control}
-                            name="newSerialNumber"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Nuovo Numero di Serie *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Nuovo Serial #" {...field} value={field.value || ""} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    )}
+                    {/* Sezione Aggiornamento Processo */}
+                    <Card className="border-primary/20 bg-primary/5 shadow-sm overflow-hidden">
+                        <div className="bg-primary/10 px-4 py-2 border-b border-primary/20 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Wrench className="w-4 h-4 text-primary" />
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-primary">Aggiornamento Processo</h3>
+                            </div>
+                            <Badge variant="outline" className="bg-background/80 border-primary/30 text-primary">
+                                {form.watch("status")}
+                            </Badge>
+                        </div>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="status"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-semibold">Stato Attuale</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-background border-primary/20 focus:ring-primary/30">
+                                                        <SelectValue placeholder="Seleziona lo stato" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="In attesa">In attesa</SelectItem>
+                                                    <SelectItem value="In lavorazione">In lavorazione</SelectItem>
+                                                    <SelectItem value="Completato">Completato</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Stato</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Seleziona lo stato" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="In attesa">In attesa</SelectItem>
-                                        <SelectItem value="In lavorazione">In lavorazione</SelectItem>
-                                        <SelectItem value="Completato">Completato</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                                <FormField
+                                    control={form.control}
+                                    name="solution"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-semibold">Soluzione Proposta</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value || undefined}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-background border-muted/20">
+                                                        <SelectValue placeholder="Seleziona una soluzione" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {SOLUTIONS.map(s => (
+                                                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="producer"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-semibold flex items-center gap-2">
+                                                <Factory className="w-4 h-4 text-muted-foreground" />
+                                                Produttore Coinvolto
+                                            </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value || undefined}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-background border-muted/20">
+                                                        <SelectValue placeholder="Seleziona un produttore" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {PRODUCERS.map(p => (
+                                                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {watchSolution === "Substituição" && (
+                                    <FormField
+                                        control={form.control}
+                                        name="newSerialNumber"
+                                        render={({ field }) => (
+                                            <FormItem className="animate-in fade-in slide-in-from-left-2 duration-300">
+                                                <FormLabel className="font-semibold text-primary">Nuovo Numero di Serie *</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Nuovo Serial #" {...field} value={field.value || ""} className="bg-background border-primary/30 ring-primary/10 ring-2" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4">

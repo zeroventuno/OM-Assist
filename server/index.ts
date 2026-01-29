@@ -49,11 +49,19 @@ app.use((req, res, next) => {
 
 const server = registerRoutes(app);
 
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   const status = err.status || err.statusCode || 500;
   const message = err.message || "Internal Server Error";
+
+  if (status === 400 && err instanceof SyntaxError && 'body' in err) {
+    console.error("JSON Syntax Error:", err.message);
+    console.error("Request Path:", req.path);
+    if (req.rawBody) {
+      console.error("Raw Body Content:", (req.rawBody as Buffer).toString());
+    }
+  }
+
   res.status(status).json({ message });
-  throw err;
 });
 
 if (app.get("env") === "development") {
