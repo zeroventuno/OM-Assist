@@ -4,6 +4,7 @@ import { type Ticket, type InsertTicket, type Warranty, type InsertWarranty } fr
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import Header from "@/components/Header";
 import DashboardMetrics from "@/components/DashboardMetrics";
+import WarrantyMetrics from "@/components/WarrantyMetrics";
 import TicketTable from "@/components/TicketTable";
 import TicketModal from "@/components/TicketModal";
 import WarrantyTable from "@/components/WarrantyTable";
@@ -150,8 +151,6 @@ export default function Dashboard() {
       <Header onNewTicket={handleNew} />
 
       <main className="container max-w-7xl px-4 md:px-8 py-8">
-        <DashboardMetrics tickets={tickets} />
-
         <div className="mt-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -172,6 +171,9 @@ export default function Dashboard() {
             </div>
 
             <TabsContent value="tickets" className="border rounded-lg overflow-hidden border-none outline-none">
+              <div className="mb-6">
+                <DashboardMetrics tickets={tickets} />
+              </div>
               <div className="border rounded-lg overflow-hidden">
                 {isLoadingTickets ? (
                   <div className="flex items-center justify-center py-16 text-muted-foreground">
@@ -188,6 +190,9 @@ export default function Dashboard() {
             </TabsContent>
 
             <TabsContent value="warranties" className="border rounded-lg overflow-hidden border-none outline-none">
+              <div className="mb-6">
+                <WarrantyMetrics warranties={warranties} />
+              </div>
               <div className="border rounded-lg overflow-hidden">
                 {isLoadingWarranties ? (
                   <div className="flex items-center justify-center py-16 text-muted-foreground">
