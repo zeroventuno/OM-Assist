@@ -65,6 +65,9 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
             solution: "",
             producer: "",
             newSerialNumber: "",
+            orderNumber: "",
+            value: "",
+            invoice: "",
         },
     });
 
@@ -392,6 +395,59 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
                                         )}
                                     />
                                 )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Sezione Finanziario / Amministrativo */}
+                    <Card className="border-muted/40 shadow-sm overflow-hidden">
+                        <div className="bg-muted/30 px-4 py-2 border-b flex items-center gap-2">
+                            <Info className="w-4 h-4 text-primary" />
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Finanziario / Amministrativo</h3>
+                        </div>
+                        <CardContent className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="orderNumber"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium"># Ordine</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="N° Ordine" {...field} value={field.value || ""} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="value"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Valore</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Valore" {...field} value={field.value || ""} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="invoice"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Fattura</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Fattura" {...field} value={field.value || ""} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
                         </CardContent>
                     </Card>
