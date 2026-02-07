@@ -222,6 +222,7 @@ export class DatabaseStorage implements IStorage {
       solution: "Soluzione",
       producer: "Produttore",
       newSerialNumber: "Nuovo N° Serial",
+      processType: "Tipo di Processo",
       orderNumber: "N° Ordine",
       value: "Valore",
       invoice: "Fattura",

@@ -88,6 +88,7 @@ export const warranties = pgTable("warranties", {
   paintDetails: text("paint_details"),
   componentsDescription: text("components_description"),
   protocolNumber: text("protocol_number").unique(),
+  processType: text("process_type").notNull().default("Garantia"),
   status: text("status").notNull().default("In attesa"),
   solution: text("solution"),
   producer: text("producer"),

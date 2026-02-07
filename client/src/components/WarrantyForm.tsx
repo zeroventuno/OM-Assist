@@ -37,7 +37,13 @@ const PRODUCERS = [
     "Pedemonte",
     "Barra + Pedemonte",
     "Univer",
-    "Univer + Barra"
+    "Univer + Barra",
+    "Sita",
+    "Sita + Barra",
+    "Carbon Tech",
+    "Carbon Tech + Barra",
+    "Barco",
+    "Barco + Barra"
 ];
 
 const SOLUTIONS = [
@@ -65,6 +71,7 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
             solution: "",
             producer: "",
             newSerialNumber: "",
+            processType: "Garantia",
             orderNumber: "",
             value: "",
             invoice: "",
@@ -157,6 +164,27 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
                                             <FormControl>
                                                 <Input type="email" placeholder="mario@email.com" {...field} className="bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all" />
                                             </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="processType"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-semibold">Tipo di Processo</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-background border-muted/20 focus:ring-primary/30">
+                                                        <SelectValue placeholder="Seleziona tipo" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="Garantia">Garantia</SelectItem>
+                                                    <SelectItem value="A pagamento">A pagamento</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}
