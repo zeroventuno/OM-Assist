@@ -25,6 +25,8 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ClipboardList, Info, Factory, Wrench } from "lucide-react";
 
+import ImageUploadGallery from "./ImageUploadGallery";
+
 interface WarrantyFormProps {
     onSubmit: (data: InsertWarranty) => void;
     onCancel?: () => void;
@@ -75,6 +77,7 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
             orderNumber: "",
             value: "",
             invoice: "",
+            images: [],
         },
     });
 
@@ -302,24 +305,43 @@ export default function WarrantyForm({ onSubmit, onCancel, defaultValues, isLoad
                                 />
                             </div>
 
-                            <FormField
-                                control={form.control}
-                                name="observation"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="font-medium">Osservazioni Aggiuntive</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Note supplementari..."
-                                                className="min-h-[60px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
-                                                {...field}
-                                                value={field.value || ""}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="observation"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-medium">Osservazioni Aggiuntive</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    placeholder="Note supplementari..."
+                                                    className="min-h-[140px] bg-background border-muted/20 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                                                    {...field}
+                                                    value={field.value || ""}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="images"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <ImageUploadGallery
+                                                    value={(field.value as string[]) || []}
+                                                    onChange={field.onChange}
+                                                    isLoading={isLoading}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </CardContent>
                     </Card>
 

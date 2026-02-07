@@ -190,6 +190,7 @@ export class DatabaseStorage implements IStorage {
       .insert(warranties)
       .values({
         ...insertWarranty,
+        images: insertWarranty.images as string[] | null,
         startDate: insertWarranty.startDate ? new Date(insertWarranty.startDate) : now,
         protocolNumber,
         history: initialHistory,
@@ -223,6 +224,7 @@ export class DatabaseStorage implements IStorage {
       producer: "Produttore",
       newSerialNumber: "Nuovo N° Serial",
       processType: "Tipo di Processo",
+      images: "Foto",
       orderNumber: "N° Ordine",
       value: "Valore",
       invoice: "Fattura",
@@ -274,6 +276,7 @@ export class DatabaseStorage implements IStorage {
       .update(warranties)
       .set({
         ...updateData,
+        images: updateData.images as string[] | null | undefined,
         startDate: updateData.startDate ? new Date(updateData.startDate) : warranty.startDate,
         history: newHistory,
       })

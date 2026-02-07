@@ -96,6 +96,7 @@ export const warranties = pgTable("warranties", {
   orderNumber: text("order_number"),
   value: text("value"),
   invoice: text("invoice"),
+  images: jsonb("images").$type<string[]>(),
   history: jsonb("history").$type<HistoryEntry[]>(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
