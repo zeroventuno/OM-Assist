@@ -9,10 +9,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import heic2any from "heic2any";
-import imageCompression from "browser-image-compression";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
+import imageCompression from "browser-image-compression";
 
 interface ImageUploadGalleryProps {
     value?: string[];
@@ -34,45 +34,40 @@ export default function ImageUploadGallery({ value = [], onChange, isLoading }: 
 
         try {
             for (let i = 0; i < files.length; i++) {
-                let file = files[i];
+                const file = files[i];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const filePath = `${fileName}`;
 
-                // Convert HEIC/HEIF to JPG
-                if (file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif") || file.type === "image/heic" || file.type === "image/heif") {
-                    try {
-                        const blob = await heic2any({
-                            blob: file,
-                            toType: "image/jpeg",
-                            quality: 0.7
-                        });
-                        const convertedBlob = Array.isArray(blob) ? blob[0] : blob;
-                        file = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
-                            type: "image/jpeg",
-                        });
-                    } catch (error) {
-                        console.error("HEIC conversion failed:", error);
-                    }
-                }
-
-                // Compress image
+                // Compress image before upload to save bandwidth and storage
                 const options = {
-                    maxSizeMB: 0.5,
-                    maxWidthOrHeight: 1280,
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1920,
                     useWebWorker: true,
                 };
 
+                let fileToUpload = file;
                 try {
-                    const compressedFile = await imageCompression(file, options);
-                    const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
-                    newImages.push(base64);
+                    fileToUpload = await imageCompression(file, options);
                 } catch (error) {
-                    console.error("Compression failed:", error);
-                    // Fallback to original if compression fails
-                    const reader = new FileReader();
-                    const base64 = await new Promise<string>((resolve) => {
-                        reader.onloadend = () => resolve(reader.result as string);
-                        reader.readAsDataURL(file);
-                    });
-                    newImages.push(base64);
+                    console.error("Compression failed, uploading original:", error);
+                }
+
+                const { error: uploadError } = await supabase.storage
+                    .from('warranty-images')
+                    .upload(filePath, fileToUpload);
+
+                if (uploadError) {
+                    console.error('Error uploading image:', uploadError);
+                    continue;
+                }
+
+                const { data } = supabase.storage
+                    .from('warranty-images')
+                    .getPublicUrl(filePath);
+
+                if (data) {
+                    newImages.push(data.publicUrl);
                 }
             }
 
